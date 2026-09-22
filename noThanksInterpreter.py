@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+pygame.init()
 
 fullDeck = list(range(3, 36))
 deck = fullDeck.copy()
@@ -14,6 +15,8 @@ chipsPerPlayer = 0
 botName = None
 botChips = None
 botInventory = None
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+pygame.display.set_caption("No thanks!")
 
 def play(takeCard: bool, message: str = None):
     global currentBot, currentCard, chipsInPot
