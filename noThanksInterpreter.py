@@ -15,7 +15,7 @@ botName = None
 botChips = None
 botInventory = None
 
-def play(takeCard: bool, message: str=None):
+def play(takeCard: bool, message: str = None):
     global currentBot, currentCard, chipsInPot
     if takeCard:
         currentBot["chips"] += chipsInPot
