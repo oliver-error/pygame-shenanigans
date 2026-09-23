@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import time
 pygame.init()
 
 fullDeck = list(range(3, 36))
@@ -9,7 +10,7 @@ currentCard = None
 chipsInPot = 0
 CARDSTOREMOVE = 9
 currentBot = None
-bots = {"bot0": {"name": "me", "chips": 0, "color": (0, 255, 0), "inventory": []},} # key: file path value: name, chips, color, inventory
+bots = {"bot0": {"name": "me", "chips": 0, "color": (0, 0, 0), "inventory": []},} # key: file path value: name, chips, color, inventory
 botCount = len(bots.keys())
 chipsPerPlayer = 0
 botName = None
@@ -65,6 +66,10 @@ for card in removedCards:
 random.shuffle(deck)
 
 while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+    
     currentCard = deck.pop(random.sample(deck))
     chipsInPot = 0
 
@@ -73,4 +78,11 @@ while True:
         botName = currentBot["name"]
         botChips = currentBot["chips"]
         botInventory = currentBot["inventory"]
-        exec(f"runBot{path[3:]}()")
+        exec(f"runBot{path[3:]}()") 
+        # render changes
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
+                    break
+            time.sleep(0.1)
+                
