@@ -70,7 +70,7 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
     
-    currentCard = deck.pop(random.sample(deck))
+    currentCard = deck.pop()
     chipsInPot = 0
 
     for path in bots.keys():
