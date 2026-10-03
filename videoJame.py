@@ -84,6 +84,7 @@ class AlienInvasion:
             for bullet in self.bullets.copy():
                 if bullet.rect.bottom <= 0:
                     self.bullets.remove(bullet)
+            self.aliens.update()
             self._update_screen()
             self.ship.update()
             self.clock.tick(60)

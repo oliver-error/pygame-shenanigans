@@ -196,13 +196,19 @@ def renderGame(screen):
             text += f"{key}: "
             for card in value:
                 text += f"{card}, "
-            text = text[:len(text)]
+            text = text.rstrip(", ")
         else:
             text += f"{key}: {value}\n"
     font = pygame.font.Font(None, 50)
     textSurface = font.render(text, True, (0, 0, 0))
     textRect = textSurface.get_rect()
-    textRect.topright = (screenRect.topright[0] - 30, screenRect.topright[1] + 30)
+    backRect = pygame.Rect(0, 0, textRect.width + 40, textRect.height + 20)
+    trimmingRect = pygame.Rect(0, 0, textRect.width + 50, textRect.height + 30)
+    textRect.topright = (screenRect.topright[0] - 30, screenRect.topright[1] + 18)
+    trimmingRect.topright = screenRect.topright
+    backRect.center = trimmingRect.center
+    pygame.draw.rect(screen, (0, 0, 0), trimmingRect)
+    pygame.draw.rect(screen, (255, 255, 255), backRect)
     screen.blit(textSurface, textRect)
 
     # render pot
@@ -319,7 +325,10 @@ if __name__ == '__main__':
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         sys.exit()
-                    if event.type == pygame.KEYUP and event.key == pygame.K_RIGHT:
-                        loop = False
+                    if event.type == pygame.KEYUP: 
+                        if event.key == pygame.K_RIGHT:
+                            loop = False
+                        elif event.key == pygame.K_ESCAPE:
+                            sys.exit()
                 time.sleep(0.01)
                     
