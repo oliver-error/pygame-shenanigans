@@ -7,6 +7,7 @@ from bullet import Bullet
 from alien import Alien
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 class AlienInvasion:
     """overall class to manage game assets and behavior"""
     def __init__(self):
@@ -24,6 +25,7 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self.stats = GameStats(self)
+        self.sb = Scoreboard(self)
         self._create_fleet()
 
     def _create_fleet(self):
@@ -84,6 +86,7 @@ class AlienInvasion:
         # register display changes
         self.ship.blitme()
         self.aliens.draw(self.screen)
+        self.sb.show_score()
         if not self.game_active:
             self.play_button.draw_button()
         pygame.display.flip()
@@ -93,15 +96,13 @@ class AlienInvasion:
         if button_clicked and not self.game_active:
             self.game_active = True
             self.stats.reset_stats()
+            self.sb.prep_score()
 
             self.bullets.empty()
             self.aliens.empty()
 
             self._create_fleet()
             self.ship._center_ship()
-
-
-
 
     def _update_bullets(self):
         self.bullets.update()
@@ -110,11 +111,21 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        self._check_bullet_collisions()
+
+
+    def _check_bullet_collisions(self):
         collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
+        if collisions:
+            self.stats.score += self.settings.alien_points
+            self.sb.prep_score()
+            self.sb.check_high_score()
 
         if not self.aliens:
             self.bullets.empty()
             self._create_fleet()
+
 
     def _update_aliens(self):
         self.aliens.update()
