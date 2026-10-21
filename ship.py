@@ -1,8 +1,11 @@
 import pygame
-class Ship:
+from pygame.sprite import Sprite
+
+class Ship(Sprite):
     """A class to manage the ship."""
     def __init__(self, ai_game):
         """Initalize the ship and set its starting location."""
+        super().__init__()
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
         self.image = pygame.image.load("images/ship.bmp")

@@ -2,17 +2,18 @@ import pygame
 import random
 import math
 import time
+import sys
 
 # config 
 nestPos = (0, 0)
 foodPos = (0, 20)
 worldHeight = 50
 worldWidth = 50
-strengthIncrement = 0.05
+strengthIncrement = 0.05 
 antCount = 100
-decayRate = 0.01 # range of 0.0 inclusive to 1.0 exclusive
-explorationRate = 0.2 # range of 0.0 inclusive to 1.0 exclusive
-maxSteps = 1000
+decayRate = 0.003 # range of 0.0 inclusive to 1.0 exclusive
+explorationRate = 0.24 # range of 0.0 inclusive to 1.0 exclusive
+maxSteps = 2000
 
 # setup
 pygame.init()
@@ -26,12 +27,14 @@ row = []
 checkingPixel = [0, 0]
 paths = None
 stepCounter = 0
+foodPickedUp = 0
+foodDeposited = 0
 
 # get starting values
 world[(foodPos[0], foodPos[1])] = [[100000, True]]
 world[(nestPos[0], nestPos[1])] = [[100000, False]]
 for i in range(antCount):
-    ants.append([nestPos[0], nestPos[1], 1, False])
+    ants.append([nestPos[0], nestPos[1], 1, False, (0, 0)])
 
 # clamp values
 nestPos = (round(nestPos[0]), round(nestPos[1]))
@@ -49,11 +52,6 @@ elif explorationRate >= 1:
 
 def renderPixel(position: tuple, color: tuple, pathStrength: float = 0):
     global screen
-    if pathStrength > 255:
-        pathStrength = 255
-    if pathStrength < 0:
-        pathStrength = 0
-    pathStrength = int(pathStrength)
 
     if screenWidth < screenHeight:
         pixelSize = (screenWidth / worldWidth, screenWidth / worldWidth)
@@ -73,6 +71,10 @@ def renderPixel(position: tuple, color: tuple, pathStrength: float = 0):
 
 # main simulation loop
 while stepCounter <= maxSteps:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
     for ant in ants:
         xPosition = ant[0]
         yPosition = ant[1]
@@ -119,7 +121,8 @@ while stepCounter <= maxSteps:
 
         sumPos = [0, 0]
 
-        
+        lastPos = currentPos
+
         if paths and random.random() >= explorationRate:
             chosenPos = random.choices(list(paths.keys()), weights=list(paths.values()), k=1)[0]
 
@@ -173,12 +176,12 @@ while stepCounter <= maxSteps:
         # food check
         if currentPos == foodPos:
             hasFood = True
+            foodPickedUp += 1
         elif currentPos == nestPos:
             hasFood = False
+            foodDeposited += 1
 
         # path creation / strengthing
-        currentPos = (xPosition, yPosition)
-
         pixel = world.setdefault(currentPos, [])
 
         pathIndex = -1
@@ -191,13 +194,14 @@ while stepCounter <= maxSteps:
         if pathIndex == -1:
             pixel.append([strengthIncrement, hasFood])
         else:
-            pixel[pathIndex][0] += strengthIncrement
-
+            if pixel[pathIndex][0] < 1.0:
+                pixel[pathIndex][0] += strengthIncrement
 
         ant[0] = xPosition
         ant[1] = yPosition
         ant[2] = direction
         ant[3] = hasFood
+        ant[4] = lastPos
 
 
     # path decay and removal
@@ -219,9 +223,9 @@ while stepCounter <= maxSteps:
     for position, pixel in world.items():
         for trail in pixel:
             if trail[1]:
-                renderPixel(position, (255, 0, 0), trail[0] * 600)
+                renderPixel(position, (255, 0, 0), abs(trail[0]) * 600)
             else:
-                renderPixel(position, (0, 0, 255), trail[0] * 600)
+                renderPixel(position, (0, 0, 255), abs(trail[0]) * 600)
 
     for ant in ants:
         renderPixel((ant[0], ant[1]), (0, 0, 0))
@@ -232,4 +236,7 @@ while stepCounter <= maxSteps:
     pygame.display.flip()
 
     stepCounter += 1
-    time.sleep(0.01)
+    #time.sleep(0.01)
+
+print(f"food picked up: {foodPickedUp}")
+print(f"food deposited: {foodDeposited}")
