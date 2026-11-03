@@ -17,8 +17,7 @@ CARDS_TO_REMOVE = 9
 currentBot = None
 bots = {} # key: file path value: name, chips, color, inventory
 botPath = Path("no_thanks/botData.json")
-bots = json.loads(botPath.read_text())
-botCount = len(bots.keys())
+botCount = 0
 chipsPerPlayer = 0
 botName = None
 botChips = None
@@ -272,6 +271,11 @@ def renderCard(screen, position: tuple = screen.get_rect().center, cardNumber: i
 
 
 if __name__ == '__main__':
+    # get bot data from JSON
+    bots = json.loads(botPath.read_text())
+    botCount = len(bots.keys())
+
+    # player check
     if botCount < 3:
         print("not enough players!")
         #sys.exit()
@@ -283,14 +287,18 @@ if __name__ == '__main__':
     else:
         chipsPerPlayer = 7
 
+    # import all bots
     for path, currentBot in bots.items():
         currentBot["chips"] = chipsPerPlayer
         exec(f"from bots.{path} import run_turn as runBot{path}")
 
+    # make deck
     deck = random.sample(deck, len(deck) - CARDS_TO_REMOVE) # remove 9 cards at random
+    random.shuffle(deck)
     removedCards = list(set(deck) ^ set(fullDeck))
 
     screen.fill((230, 230, 230))
+
     # make removed card text
     font = pygame.font.Font(None, 90)
     textSurface = font.render("removed cards:", True, (0, 0, 0))
@@ -304,27 +312,29 @@ if __name__ == '__main__':
         i += 1
         
     pygame.display.flip()
-    time.sleep(5)
-
-    random.shuffle(deck)
+    time.sleep(5) # delay to show data
 
     currentCard = deck.pop()
     chipsInPot = 0
     while True:
         for path, bot in bots.items():
+            # get new varibles and run turn
             currentBot = bot
             botName = currentBot["name"]
             botChips = currentBot["chips"]
             botInventory = currentBot["inventory"]
             botColor = currentBot["color"]
+
             renderGame(screen)
             renderCard(screen, cardNumber=currentCard, scale=35)
             exec(f"runBot{path}()")
+
             currentBot["name"] = botName
             currentBot["color"] = botColor
+
             pygame.display.flip()
-            time.sleep(0.1)
             loop = True
+
             while loop:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -334,5 +344,6 @@ if __name__ == '__main__':
                             loop = False
                         elif event.key == pygame.K_ESCAPE:
                             sys.exit()
+
                 time.sleep(0.01)
-                    
+
