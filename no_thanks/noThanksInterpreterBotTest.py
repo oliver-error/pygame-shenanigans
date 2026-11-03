@@ -244,6 +244,7 @@ def renderGame(screen):
     pygame.draw.polygon(screen, (255, 0, 0), ((finalX1, finalY1), (finalX2, finalY2), (finalX3, finalY3)), width=0)
 
 
+
 def renderCard(screen, position: tuple = screen.get_rect().center, cardNumber: int = 0, scale: float = 1):
     """render the specified card"""
     global cardColors
@@ -270,7 +271,7 @@ def renderCard(screen, position: tuple = screen.get_rect().center, cardNumber: i
 if __name__ == '__main__':
     if botCount < 3:
         print("not enough players!")
-        #sys.exit()
+        sys.exit()
         chipsPerPlayer = 22
     elif botCount <= 5:
         chipsPerPlayer = 11
@@ -325,7 +326,7 @@ if __name__ == '__main__':
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         sys.exit()
-                    if event.type == pygame.KEYUP: 
+                    if event.type == pygame.KEYDOWN: 
                         if event.key == pygame.K_RIGHT:
                             loop = False
                         elif event.key == pygame.K_ESCAPE:

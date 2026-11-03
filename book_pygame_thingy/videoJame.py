@@ -1,13 +1,13 @@
 import sys
 import pygame
 from time import sleep
-from book_pygame_thingy.settings import Settings
-from book_pygame_thingy.ship import Ship
-from book_pygame_thingy.bullet import Bullet
-from book_pygame_thingy.alien import Alien
+from settings import Settings
+from ship import Ship
+from bullet import Bullet
+from alien import Alien
 from game_stats import GameStats
-from book_pygame_thingy.button import Button
-from book_pygame_thingy.scoreboard import Scoreboard
+from button import Button
+from scoreboard import Scoreboard
 class AlienInvasion:
     """overall class to manage game assets and behavior"""
     def __init__(self):
