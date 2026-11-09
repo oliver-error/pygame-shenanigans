@@ -199,6 +199,7 @@ def renderGame(screen):
             for card in value:
                 text += f"{card}, "
             text = text.rstrip(", ")
+            text += "\n"
         else:
             text += f"{key}: {value}\n"
     font = pygame.font.Font(None, 50)
