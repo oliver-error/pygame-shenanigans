@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import random
 
 folder_path = Path("no_thanks/bots")
 dataPath = Path("no_thanks/botData.json")
@@ -14,6 +15,6 @@ print(file_paths) # Output will be a clean list: ['bot0', 'bot1', ...]
 data = {}
 for bot_name in file_paths:
     # Use the clean bot name as the key
-    data[bot_name] = {"name": "", "chips": 0, "color": (0, 0, 0), "inventory": []}
+    data[bot_name] = {"name": "", "chips": 0, "color": (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), "inventory": []}
 
 dataPath.write_text(json.dumps(data, indent=4))
