@@ -1,21 +1,21 @@
 {
     "bot0": {
-        "name": "",
+        "name": "bot0",
         "chips": 0,
         "color": [
-            235,
-            210,
-            8
+            58,
+            194,
+            48
         ],
         "inventory": []
     },
     "bot1": {
-        "name": "",
+        "name": "bot1",
         "chips": 0,
         "color": [
-            237,
             21,
-            58
+            6,
+            204
         ],
         "inventory": []
     }

@@ -22,4 +22,4 @@ varibles:
 """
 
 def run_turn():
-    I.play(False)
+    I.play(False, I.chipsInPot)

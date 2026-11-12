@@ -119,7 +119,8 @@ def renderTextBox(screen, message):
 
 
 def play(takeCard: bool, message: str = None):
-    global currentBot, currentCard, chipsInPot, deck, screen, screenRect, cardPositions
+    global currentBot, currentCard, chipsInPot, deck, screen, screenRect, cardPositions, chipStorage
+    chipsInPot = chipStorage # to prevent bots from modifying the chips in pot to 10000 then taking
     if takeCard:
 
         currentBot["chips"] += chipsInPot
@@ -320,6 +321,7 @@ if __name__ == '__main__':
     while True:
         for path, bot in bots.items():
             # get new varibles and run turn
+            chipStorage = chipsInPot
             currentBot = bot
             botName = currentBot["name"]
             botChips = currentBot["chips"]
@@ -332,6 +334,7 @@ if __name__ == '__main__':
 
             currentBot["name"] = botName
             currentBot["color"] = botColor
+            chipsInPot = chipStorage # to prevent bots from modifying the chips in pot to 10000 then taking
 
             pygame.display.flip()
             loop = True
@@ -342,6 +345,8 @@ if __name__ == '__main__':
                         sys.exit()
                     if event.type == pygame.KEYDOWN: 
                         if event.key == pygame.K_RIGHT:
+                            loop = False
+                        if event.key == pygame.K_SPACE:
                             loop = False
                         elif event.key == pygame.K_ESCAPE:
                             sys.exit()
