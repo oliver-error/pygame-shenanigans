@@ -4,7 +4,7 @@ import random
 
 data = Path("robot_graphing_stuff/robot_data/p 0.015.txt").read_text()
 dataList = data.splitlines()
-RPMs = dataList[0].split(",")
+RPMs = dataList[3].split(",")
 times = dataList[1].split(",")
 
 temp = []
