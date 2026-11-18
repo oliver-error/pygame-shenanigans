@@ -2,6 +2,7 @@ import sys
 from time import sleep
 
 import pygame
+import random
 
 from settings import Settings
 from game_stats import GameStats
@@ -39,8 +40,12 @@ class AlienInvasion:
         # Start Alien Invasion in an inactive state.
         self.game_active = False
 
+        self.screen_rect = self.screen.get_rect()
+
         # Make the Play button.
-        self.play_button = Button(self, "Play")
+        self.easy_button = Button(self, "easy", (random.randint(0, self.settings.screen_width), random.randint(0, self.settings.screen_height)))
+        self.medium_button = Button(self, "medium", (random.randint(0, self.settings.screen_width), random.randint(0, self.settings.screen_height)))
+        self.hard_button = Button(self, "hard", (random.randint(0, self.settings.screen_width), random.randint(0, self.settings.screen_height)))
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -70,10 +75,25 @@ class AlienInvasion:
 
     def _check_play_button(self, mouse_pos):
         """Start a new game when the player clicks Play."""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and not self.game_active:
+        easy_clicked = self.easy_button.rect.collidepoint(mouse_pos)
+        med_clicked = self.medium_button.rect.collidepoint(mouse_pos)
+        hard_clicked = self.hard_button.rect.collidepoint(mouse_pos)
+        any_clicked = easy_clicked or med_clicked or hard_clicked
+        if any_clicked and not self.game_active:
             # Reset the game settings.
             self.settings.initialize_dynamic_settings()
+            if (easy_clicked):
+                self.settings.alien_speed = 0.5
+                self.settings.ship_speed = 2
+                self.bullet_speed = 3
+            elif (med_clicked):
+                self.settings.alien_speed = 1
+                self.settings.ship_speed = 1.5
+                self.bullet_speed = 2.5
+            elif (hard_clicked):
+                self.settings.alien_speed = 1.5
+                self.settings.ship_speed = 1
+                self.bullet_speed = 2
 
             # Reset the game statistics.
             self.stats.reset_stats()
@@ -243,7 +263,9 @@ class AlienInvasion:
 
         # Draw the play button if the game is inactive.
         if not self.game_active:
-            self.play_button.draw_button()
+            self.easy_button.draw_button()
+            self.medium_button.draw_button()
+            self.hard_button.draw_button()
 
         pygame.display.flip()
 
