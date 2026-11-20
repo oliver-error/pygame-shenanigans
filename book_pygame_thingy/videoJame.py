@@ -10,7 +10,7 @@ from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
-from alien import Alien
+import alien as alienFile
 
 
 class AlienInvasion:
@@ -160,8 +160,18 @@ class AlienInvasion:
                 self.bullets, self.aliens, True, True)
 
         if collisions:
-            for aliens in collisions.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
+            for aliens_hit in collisions.values():
+                for alien in aliens_hit:
+                    if alien.color == "green":
+                        print("green")
+                        self.stats.score += self.settings.green_alien_points
+                    elif alien.color == "yellow":
+                        print("yellow")
+                        self.stats.score += self.settings.yellow_alien_points
+                    else:
+                        print("red")
+                        self.stats.score += self.settings.red_alien_points
+            print(self.stats.score)
             self.sb.prep_score()
             self.sb.check_high_score()
 
@@ -220,7 +230,7 @@ class AlienInvasion:
         """Create the fleet of aliens."""
         # Create an alien and keep adding aliens until there's no room left.
         # Spacing between aliens is one alien width and one alien height.
-        alien = Alien(self)
+        alien = alienFile.Alien(self)
         alien_width, alien_height = alien.rect.size
 
         current_x, current_y = alien_width, alien_height
@@ -235,7 +245,14 @@ class AlienInvasion:
 
     def _create_alien(self, x_position, y_position):
         """Create an alien and place it in the fleet."""
-        new_alien = Alien(self)
+        randomValue = random.random()
+        if randomValue < 0.7:
+            new_alien = alienFile.GreenAlien(self)
+        elif randomValue < 0.9:
+            new_alien = alienFile.YellowAlien(self)
+        else:
+            new_alien = alienFile.RedAlien(self)
+        
         new_alien.x = x_position
         new_alien.rect.x = x_position
         new_alien.rect.y = y_position

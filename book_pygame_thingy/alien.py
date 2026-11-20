@@ -33,3 +33,21 @@ class Alien(Sprite):
         return (self.rect.right >= self.screen_rect.right) or (self.rect.left <= 0)
 
 
+class GreenAlien(Alien):
+    def __init__(self, ai_game):
+        super().__init__(ai_game)
+        self.image = pygame.image.load('images/green alien.bmp')
+        self.color = "green"
+
+class YellowAlien(Alien):
+    def __init__(self, ai_game):
+        super().__init__(ai_game)
+        self.image = pygame.image.load('images/yellow alien.bmp')
+        self.color = "yellow"
+
+class RedAlien(Alien):
+    def __init__(self, ai_game):
+        super().__init__(ai_game)
+        self.image = pygame.image.load('images/red alien.bmp')
+        self.color = "red"
+        
