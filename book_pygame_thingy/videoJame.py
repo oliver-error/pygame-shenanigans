@@ -163,15 +163,11 @@ class AlienInvasion:
             for aliens_hit in collisions.values():
                 for alien in aliens_hit:
                     if alien.color == "green":
-                        print("green")
                         self.stats.score += self.settings.green_alien_points
                     elif alien.color == "yellow":
-                        print("yellow")
                         self.stats.score += self.settings.yellow_alien_points
                     else:
-                        print("red")
                         self.stats.score += self.settings.red_alien_points
-            print(self.stats.score)
             self.sb.prep_score()
             self.sb.check_high_score()
 
